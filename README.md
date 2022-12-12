@@ -2,7 +2,7 @@
 
 ![alt text](https://github.com/wibawaarif/Nodeflix/blob/main/Homepage.png)
 
-![alt text](https://github.com/wibawaarif/Nodeflix/blob/main/Nodeflix-Architectural-Diagram.png){:height="500px" width="700px"}
+<img src="https://github.com/favicon.ico](https://github.com/wibawaarif/Nodeflix/blob/main/Nodeflix-Architectural-Diagram.png" width="700" height="500">
 
 This project is intended to level-up my web development skills.
 
