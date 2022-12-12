@@ -4,7 +4,7 @@
 
 Architectural Diagram
 
-<img src="https://github.com/wibawaarif/Nodeflix/blob/main/Nodeflix-Architectural-Diagram.png" width="400" />
+<img src="https://github.com/wibawaarif/Nodeflix/blob/main/Nodeflix-Architectural-Diagram.png" width="500" />
 
 This project is intended to level-up my web development skills.
 
