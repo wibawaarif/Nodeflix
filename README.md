@@ -11,3 +11,7 @@ This project is intended to level-up my web development skills.
 Technologies are used: 
   - Node.JS
   - Vue.JS
+
+Features:
+  - Email registration
+  - Google sign in
