@@ -122,6 +122,9 @@ export default {
     switchVisibility() {
       this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
     },
+    tests() {
+
+    },
     sendData() {
       this.isValid = false;
       this.responseMessage = "";

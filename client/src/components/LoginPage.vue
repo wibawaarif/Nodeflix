@@ -87,13 +87,6 @@ export default {
     switchVisibility() {
       this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
     },
-    makeToast(variant = null) {
-        this.$bvToast.toast('Toast body content', {
-          title: `Variant ${variant || 'default'}`,
-          variant: variant,
-          solid: true
-        })
-      },
     userLogin() {
       this.responseMessage = "";
       this.isFieldEmpty = false;
