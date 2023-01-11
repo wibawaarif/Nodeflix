@@ -30,7 +30,7 @@ async (req, res) => {
     })
   }
 
-  let token = jwt.sign({userId: findUser._id}, 'secretkey')
+  let token = jwt.sign({userId: findUser._id, email: findUser.email}, 'secretkey')
   return res.status(200).send({
     title: 'login success',
     MqmK0vCX0rJWbwzrV8bT5hGCpH8O5R8Sr93a: token,

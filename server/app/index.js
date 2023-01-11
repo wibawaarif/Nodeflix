@@ -1,15 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const helmet = require('helmet');
+const xss = require('xss-clean');
+const hpp = require('hpp');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const { Strategy } = require('passport-google-oauth20');
 const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 
-const UserLogin = require('./routes/users/login')
-const UserRegister = require('./routes/users/register')
-const sendEmail = require('./routes/users/sendMail')
+const UserLogin = require('./routes/auth/login')
+const UserRegister = require('./routes/auth/register')
+const sendEmail = require('./routes/auth/sendMail')
+const getUsers = require('./routes/users/show')
+const updateUsers = require('./routes/users/update')
 
 require('dotenv').config();
 
@@ -47,18 +51,32 @@ passport.deserializeUser((id, done) => {
 });
 
 const path = __dirname + '/views/' 
-const app = express();
+const app = express();  
+
+/** Sanitizing */
 app.use(mongoSanitize());
+
+/** Securing XSS exploit */
+app.use(xss());
+
+/** Securing HTTP param pollution exploit */
+app.use(hpp());
+
+
+/** Securing headers */
+app.use(helmet());
+
+
 app.use(cors())
 app.use(express.static(path))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(helmet());
-
 app.use('/', UserLogin);
 app.use('/', UserRegister)
 app.use('/', sendEmail)
+app.use('/', getUsers)
+app.use('/', updateUsers)
 
 app.use(cookieSession({
   name: 'session',

@@ -1,6 +1,7 @@
 <template>
   <v-container class="align-center" justify="center">
-    <v-app-bar flat class="pt-6 pb-2" color="rgb(0, 0, 0, 0.5)">
+    <v-app-bar flat class="pt-6 pb-2" color="rgb(0, 0, 0, 0.9)">
+
         <v-row>
           <!-- TODO: LOGO -->
           <v-col cols="2">
@@ -24,7 +25,7 @@
       </v-col>
       <!-- TODO: ACCOUNT NAME -->
       <v-col class="d-flex justify-end ma-0 pa-0" align-self="center" cols="2">
-        <p class="white-text">Arif Wibawa</p>
+        <p class="white-text">{{test.name}}</p>
       </v-col>
       <!-- TODO: ACCOUNT DROPDOWN -->
       <v-col class="mb-4 d-flex justify-start" align-self="center" cols="1">
@@ -48,15 +49,18 @@
         </v-btn>
       </template>
 
-      <v-card color="rgb(32, 32, 32, 0.8)" min-width="180">
+      <v-card color="rgb(32, 32, 32, 0.8)" width="240">
         <v-list class="pb-0 mb-0" bg-color="rgb(32, 32, 32, 0.8)" >
           <v-list-item
-          class="d-flex justify-center"
           >
-          <v-icon class="ml-10" size="x-large" variant="outlined" color="danger">
+          <div class="d-flex justify-center">
+          <v-icon size="x-large" variant="outlined" color="danger">
             mdi-netflix
           </v-icon>
-          <p class="white-text mt-2 mb-2">arif@gmail.com</p>
+        </div>
+        <div class="d-flex justify-center">
+          <p class="white-text mt-2 mb-2">{{test.email}}</p>
+        </div>
           </v-list-item>
         </v-list>
         <v-divider class="ma-0" color="white"></v-divider>
@@ -74,14 +78,26 @@
           >
           <p class="white-text mt-3 mr-16">My Movies</p>
           </v-btn>
-            <v-btn
+          <v-btn
+            block
+            class="ml-0 pl-0"
+            hide-details
+            color="danger"
+            variant="text"
+            prepend-icon="mdi-cog"
+            to="/user/password"
+          >
+          <p style="margin-right: 78px;" class="white-text mt-3">Account</p>
+          </v-btn>
+            <!-- <v-btn
+            to="/user/password"
             class="ml-0 pl-0"
               color="danger"
               block
               hide-details
               variant="text"
               prepend-icon="mdi-cog"
-            ><p class="white-text mt-3">Forgot Password</p></v-btn>
+            ><p class="white-text mt-3">Account</p></v-btn> -->
           </v-list-item>
         </v-list>
 
@@ -109,39 +125,92 @@
       </v-row>
     </v-app-bar>
 
-    <v-card-text>
-      <v-window v-model="tab">
+  </v-container>
+  <v-card-text class="pa-0">
+      <v-window class="pa-0" v-model="tab">
         <v-window-item value="one">
-          <p class="white-text text-h2">TEST</p>
+          <v-sheet height="750" width="100%" color="white">
+            <div>
+              <img :src="movieEndpoint" :height="200" :width="300" alt="pussInBoots">
+            </div>
+            <swiper
+            width="300"
+    :slides-per-view="3"
+    :space-between="50"
+    navigation
+    @swiper="onSwiper"
+    @slideChange="onSlideChange"
+  >
+    <swiper-slide>
+      <h2>Slide 1</h2>
+      <p>--------</p>
+      <p>--------</p>
+      <p>--------</p>
+      <p>--------</p>
+    </swiper-slide>
+    <swiper-slide>
+      <h2>Slide 2</h2>
+    </swiper-slide>
+    <swiper-slide>
+      <h2>Slide 3</h2>
+    </swiper-slide>
+    <swiper-slide>
+      <h2>Slide 4</h2>
+    </swiper-slide>
+    <swiper-slide>
+      <h2>Slide 5</h2>
+    </swiper-slide>
+    <swiper-slide>
+      <h2>Slide 6</h2>
+    </swiper-slide>
+  </swiper>
+          </v-sheet>
         </v-window-item>
 
         <v-window-item value="two">
-          <p class="white-text text-h2">TEST 2</p>
+          <v-sheet height="800px" width="100%" color="rgb(0, 0, 0, 0.9)">
+            <p class="white-text">Welcome to nodeflix</p>
+          </v-sheet>
         </v-window-item>
       </v-window>
     </v-card-text>
-
-  </v-container>
 </template>
 
 <script>
 import router from '@/router/router'
 
+  // Import Swiper Vue.js components
+  import { Swiper, SwiperSlide } from 'swiper/vue';
+
+  // Import Swiper styles
+  import 'swiper/css';
+import axios from '@/axios';
+
 export default {
+  components: {
+      Swiper,
+      SwiperSlide,
+    },
   data() {
     return {
-      emailInput: '',
       tab: null,
+      tab1: null,
       fav: true,
       menu: false,
       message: false,
       hints: true,
+      data: {},
+      popularMovieList: '',
+      movieEndpoint: 'https://image.tmdb.org/t/p/original',
     }
   },
 
   methods: {
-    count() {
-      this.test+=1
+    onSwiper(swiper) {
+      console.log(swiper)
+    },
+    onSlideChange() {
+      // console.log('slide change')
     },
     toHomepage() {
       router.push('/')
@@ -151,9 +220,27 @@ export default {
       router.push('/login')
     }
   },
-
+  computed: {
+    test() {
+      let user = this.$store.getters['fetchUser']
+      return user
+    }
+  },
   created() {
-    document.title = 'Netflix'
+    document.title = `Netflix | Home`
+  },
+  mounted() {
+    this.$store
+      .dispatch('fetchUser')
+      .catch(err => console.log(err))
+
+    axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.VUE_APP_API_KEY}&language=en-US&page=1`)
+      .then((res) => {
+        this.popularMovieList = res.data.results
+        this.movieEndpoint = `https://image.tmdb.org/t/p/original${this.popularMovieList[0]['backdrop_path']}`
+        console.log(res)
+      })
+
   },
 }
 </script>

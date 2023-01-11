@@ -44,7 +44,7 @@
       type="password"
     ></v-text-field>
       </v-form>
-    <p v-if="isFieldEmpty" class="red-text font-weight-light">Field cannot be empty</p>
+    <p v-if="isFieldEmpty" class="red-text font-weight-bold">Field cannot be empty</p>
     <v-btn
       class="pt-6 pb-6 mb-4 mt-6"
       block

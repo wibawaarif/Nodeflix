@@ -64,7 +64,7 @@
     ></v-progress-circular><p class="mt-3 text-h5" v-if="!emailClicked">Get Started ></p></v-btn>
         </v-col>
       </v-row>
-      <p class="red-text text-h6 font-weight-bold" v-if="isEmailEmpty">Email is required!</p>
+      <p class="red-text text-h6 font-weight-bold" v-if="validateEmail">{{errorMessage}}</p>
     </v-card>
 </v-container>
 </template>
@@ -81,7 +81,8 @@ export default {
       test: false,
       test1: false,
       emailInput: '',
-      isEmailEmpty: false,
+      validateEmail: false,
+      errorMessage: '',
     }
   },
   computed: {
@@ -89,9 +90,17 @@ export default {
   },
   methods: {
     sendEmail() {
-      this.isEmailEmpty = false;
+      this.validateEmail = false;
+      this.errorMessage = "";
       if (this.emailInput === '') {
-        this.isEmailEmpty = true;
+        this.validateEmail = true;
+        this.errorMessage = "Email is required!"
+        return
+      }
+
+      if (!this.emailInput.includes("@")) {
+        this.validateEmail = true;
+        this.errorMessage = "Please enter a valid email!"
         return
       }
 

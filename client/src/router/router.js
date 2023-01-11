@@ -4,6 +4,7 @@ import LoginPage from '../components/LoginPage.vue'
 import RegisterPage from '../components/RegisterPage.vue'
 import IndexPage from '../components/IndexPage.vue'
 import NotFound from '../components/NotFound.vue'
+import ForgotPassword from '../components/ForgotPassword.vue'
 
 const routes = [
   {
@@ -33,6 +34,14 @@ const routes = [
     path: "/404",
     name: "NotFound",
     component: NotFound,
+  },
+    {
+    path: "/user/password",
+    name: "ForgotPassword",
+    component: ForgotPassword,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/:catchAll(.*)",
