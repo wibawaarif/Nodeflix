@@ -129,42 +129,56 @@
   <v-card-text class="pa-0">
       <v-window class="pa-0" v-model="tab">
         <v-window-item value="one">
-          <v-sheet height="750" width="100%" color="white">
+          <div class="col-10">
+            <!-- {{ popularMovieList }} -->
             <div>
-              <img :src="movieEndpoint" :height="200" :width="300" alt="pussInBoots">
-            </div>
+              <h1 class="white-text text-left">Popular</h1>
             <swiper
-            width="300"
-    :slides-per-view="3"
-    :space-between="50"
-    navigation
-    @swiper="onSwiper"
-    @slideChange="onSlideChange"
+    :slidesPerView="6"
+    :spaceBetween="30"
+    :autoplay="{
+      delay: 2500,
+      disableOnInteraction: false,
+    }"
+
+    :slidesPerGroup="3"
+    :loop="true"
+    :loopFillGroupWithBlank="true"
+    :pagination="{
+      clickable: true,
+    }"
+    :navigation="true"
+    :modules="modules"
+    class="mySwiper"
   >
-    <swiper-slide>
-      <h2>Slide 1</h2>
-      <p>--------</p>
-      <p>--------</p>
-      <p>--------</p>
-      <p>--------</p>
-    </swiper-slide>
-    <swiper-slide>
-      <h2>Slide 2</h2>
-    </swiper-slide>
-    <swiper-slide>
-      <h2>Slide 3</h2>
-    </swiper-slide>
-    <swiper-slide>
-      <h2>Slide 4</h2>
-    </swiper-slide>
-    <swiper-slide>
-      <h2>Slide 5</h2>
-    </swiper-slide>
-    <swiper-slide>
-      <h2>Slide 6</h2>
-    </swiper-slide>
+  <swiper-slide :key="index" v-for="item, index in popularMovieList"><img :src="`https://image.tmdb.org/t/p/original${item.backdrop_path}`" :height="200" :width="300" alt="{{item}}"></swiper-slide>
   </swiper>
-          </v-sheet>
+</div>
+
+<div>
+              <h1 class="text-left white-text">Top Rated</h1>
+            <swiper
+    :slidesPerView="6"
+    :spaceBetween="30"
+    :autoplay="{
+      delay: 2500,
+      disableOnInteraction: false,
+    }"
+
+    :slidesPerGroup="3"
+    :loop="true"
+    :loopFillGroupWithBlank="true"
+    :pagination="{
+      clickable: true,
+    }"
+    :navigation="true"
+    :modules="modules"
+    class="mySwiper"
+  >
+  <swiper-slide :key="index" v-for="item, index in topRatedMovieList"><img :src="`https://image.tmdb.org/t/p/original${item.backdrop_path}`" :height="200" :width="300" alt="{{item}}"></swiper-slide>
+  </swiper>
+</div>
+</div>
         </v-window-item>
 
         <v-window-item value="two">
@@ -177,20 +191,31 @@
 </template>
 
 <script>
-import router from '@/router/router'
-
-  // Import Swiper Vue.js components
-  import { Swiper, SwiperSlide } from 'swiper/vue';
-
-  // Import Swiper styles
-  import 'swiper/css';
+import router from '@/router/router';
 import axios from '@/axios';
+// Import Swiper Vue.js components
+import { Swiper, SwiperSlide } from "swiper/vue";
+
+// Import Swiper styles
+import "swiper/css";
+
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
+// import required modules
+import { Autoplay, Pagination, Navigation } from "swiper";
+
 
 export default {
   components: {
-      Swiper,
-      SwiperSlide,
-    },
+    Swiper,
+    SwiperSlide,
+  },
+  setup() {
+    return {
+      modules: [Navigation, Pagination, Autoplay],
+    };
+  },
   data() {
     return {
       tab: null,
@@ -201,17 +226,11 @@ export default {
       hints: true,
       data: {},
       popularMovieList: '',
-      movieEndpoint: 'https://image.tmdb.org/t/p/original',
+      topRatedMovieList: '',
     }
   },
 
   methods: {
-    onSwiper(swiper) {
-      console.log(swiper)
-    },
-    onSlideChange() {
-      // console.log('slide change')
-    },
     toHomepage() {
       router.push('/')
     },
@@ -237,7 +256,12 @@ export default {
     axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.VUE_APP_API_KEY}&language=en-US&page=1`)
       .then((res) => {
         this.popularMovieList = res.data.results
-        this.movieEndpoint = `https://image.tmdb.org/t/p/original${this.popularMovieList[0]['backdrop_path']}`
+        console.log(res)
+      })
+    
+      axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.VUE_APP_API_KEY}&language=en-US&page=1`)
+      .then((res) => {
+        this.topRatedMovieList = res.data.results
         console.log(res)
       })
 
@@ -250,4 +274,38 @@ export default {
 .custom-tab-items {
     background-color: transparent !important;
 }
+
+.mySwiper {
+  width: 90%;
+  height: 30%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
 </style>
