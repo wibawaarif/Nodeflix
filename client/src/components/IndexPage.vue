@@ -129,19 +129,19 @@
   <v-card-text class="pa-0">
       <v-window class="pa-0" v-model="tab">
         <v-window-item value="one">
-          <div class="col-10">
+          <div class="bg-black">
             <!-- {{ popularMovieList }} -->
-            <div>
-              <h1 class="white-text text-left">Popular</h1>
+            <div class="swiper-container bg-black">
+              <h2 class="font-weight-bold">Popular</h2>
             <swiper
-    :slidesPerView="6"
-    :spaceBetween="30"
+    :slidesPerView="8"
+    :spaceBetween="2"
     :autoplay="{
       delay: 2500,
       disableOnInteraction: false,
+      pauseOnMouseEnter: true,
     }"
-
-    :slidesPerGroup="3"
+    :slidesPerGroup="2"
     :loop="true"
     :loopFillGroupWithBlank="true"
     :pagination="{
@@ -151,21 +151,22 @@
     :modules="modules"
     class="mySwiper"
   >
-  <swiper-slide :key="index" v-for="item, index in popularMovieList"><img :src="`https://image.tmdb.org/t/p/original${item.backdrop_path}`" :height="200" :width="300" alt="{{item}}"></swiper-slide>
+  <swiper-slide :key="index" v-for="item, index in popularMovieList"><img class="img-cover" :src="`https://image.tmdb.org/t/p/original${item.poster_path}`" alt="{{item}}"></swiper-slide>
   </swiper>
 </div>
 
 <div>
-              <h1 class="text-left white-text">Top Rated</h1>
+              <h2 class="font-weight-bold">Top Rated</h2>
             <swiper
-    :slidesPerView="6"
-    :spaceBetween="30"
+    :slidesPerView="8"
+    :spaceBetween="2"
     :autoplay="{
       delay: 2500,
       disableOnInteraction: false,
+      pauseOnMouseEnter: true,
     }"
-
-    :slidesPerGroup="3"
+    :zoom="true"
+    :slidesPerGroup="2"
     :loop="true"
     :loopFillGroupWithBlank="true"
     :pagination="{
@@ -175,16 +176,65 @@
     :modules="modules"
     class="mySwiper"
   >
-  <swiper-slide :key="index" v-for="item, index in topRatedMovieList"><img :src="`https://image.tmdb.org/t/p/original${item.backdrop_path}`" :height="200" :width="300" alt="{{item}}"></swiper-slide>
+  <swiper-slide :key="index" v-for="item, index in topRatedMovieList"><img :src="`https://image.tmdb.org/t/p/original${item.poster_path}`" alt="{{item}}"></swiper-slide>
+  </swiper>
+</div>
+
+<div>
+              <h2 class="font-weight-bold">Upcoming Movies</h2>
+            <swiper
+    :slidesPerView="8"
+    :spaceBetween="2"
+    :autoplay="{
+      delay: 2500,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+    }"
+    :slidesPerGroup="2"
+    :loop="true"
+    :loopFillGroupWithBlank="true"
+    :pagination="{
+      clickable: true,
+    }"
+    :navigation="true"
+    :modules="modules"
+    class="mySwiper"
+  >
+  <swiper-slide :key="index" v-for="item, index in upcomingMovieList"><img :src="`https://image.tmdb.org/t/p/original${item.poster_path}`" alt="{{item}}"></swiper-slide>
   </swiper>
 </div>
 </div>
         </v-window-item>
 
         <v-window-item value="two">
-          <v-sheet height="800px" width="100%" color="rgb(0, 0, 0, 0.9)">
-            <p class="white-text">Welcome to nodeflix</p>
-          </v-sheet>
+
+          <div class="bg-black">
+            <!-- {{ popularMovieList }} -->
+            <div class="bg-black">
+              <h2 class="font-weight-bold">TV Show</h2>
+            <swiper
+    :slidesPerView="8"
+    :spaceBetween="2"
+    :autoplay="{
+      delay: 2500,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+    }"
+    :slidesPerGroup="2"
+    :loop="true"
+    :loopFillGroupWithBlank="true"
+    :pagination="{
+      clickable: true,
+    }"
+    :navigation="true"
+    :modules="modules"
+    class="mySwiper"
+  >
+  <swiper-slide :key="index" v-for="item, index in popularTvList"><img class="img-cover" :src="`https://image.tmdb.org/t/p/original${item.poster_path}`" alt="{{item}}"></swiper-slide>
+  </swiper>
+</div>
+</div>
+
         </v-window-item>
       </v-window>
     </v-card-text>
@@ -203,7 +253,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 // import required modules
-import { Autoplay, Pagination, Navigation } from "swiper";
+import { EffectCoverflow, Autoplay, Pagination, Navigation } from "swiper";
 
 
 export default {
@@ -212,8 +262,16 @@ export default {
     SwiperSlide,
   },
   setup() {
+    const onSwiper = (swiper) => {
+        console.log(swiper);
+      };
+      const onSlideChange = () => {
+        console.log('slide change');
+      };
     return {
-      modules: [Navigation, Pagination, Autoplay],
+      onSwiper,
+        onSlideChange,
+        modules: [Autoplay, Pagination, Navigation, EffectCoverflow],
     };
   },
   data() {
@@ -227,6 +285,8 @@ export default {
       data: {},
       popularMovieList: '',
       topRatedMovieList: '',
+      upcomingMovieList: '',
+      popularTvList: '',
     }
   },
 
@@ -237,7 +297,10 @@ export default {
     logout() {
       localStorage.clear();
       router.push('/login')
-    }
+    },
+    hoverIn() {
+      this.$el.querySelector('.swiper-slide').style.filter = "brightness(70%)";
+    },
   },
   computed: {
     test() {
@@ -259,12 +322,21 @@ export default {
         console.log(res)
       })
     
-      axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.VUE_APP_API_KEY}&language=en-US&page=1`)
+    axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.VUE_APP_API_KEY}&language=en-US&page=1`)
       .then((res) => {
         this.topRatedMovieList = res.data.results
         console.log(res)
       })
-
+    axios.get(`https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.VUE_APP_API_KEY}&language=en-US&page=1`)
+      .then((res) => {
+        this.upcomingMovieList = res.data.results
+        console.log(res)
+      })
+    axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${process.env.VUE_APP_API_KEY}&language=en-US&page=1`)
+      .then((res) => {
+        this.popularTvList = res.data.results
+        console.log(res)
+      }) 
   },
 }
 </script>
@@ -276,15 +348,14 @@ export default {
 }
 
 .mySwiper {
-  width: 90%;
+  width: 97.5%;
   height: 30%;
 }
 
 .swiper-slide {
   text-align: center;
   font-size: 18px;
-  background: #fff;
-
+  background: black;
   /* Center slide text vertically */
   display: -webkit-box;
   display: -ms-flexbox;
@@ -304,8 +375,12 @@ export default {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; 
+  border-radius: 5%;
 }
 
+.img-cover:hover {
+  cursor: pointer;
+}
 
 </style>
