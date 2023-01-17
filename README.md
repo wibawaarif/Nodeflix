@@ -16,4 +16,4 @@ Features:
   - Email registration
   - Google sign in
   
-  75% in progress
+  85% in progress
