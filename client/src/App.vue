@@ -17,7 +17,6 @@ body {
       background-image: radial-gradient(transparent, black),url('./assets/images/netflix.jpg');
       background-size: cover;
       overflow: hidden;
-      height: 100vh;
     }
 
 #hero {

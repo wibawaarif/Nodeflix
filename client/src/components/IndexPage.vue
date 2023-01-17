@@ -1,5 +1,5 @@
 <template>
-  <v-container class="align-center" justify="center">
+  <v-container fluid class="pa-0 mt-8 align-center" justify="center">
     <v-app-bar flat class="pt-6 pb-2" color="rgb(0, 0, 0, 0.9)">
 
         <v-row>
@@ -125,23 +125,23 @@
       </v-row>
     </v-app-bar>
 
-  </v-container>
+
   <v-card-text class="pa-0">
       <v-window class="pa-0" v-model="tab">
         <v-window-item value="one">
-          <div class="bg-black">
+          <div class="pt-4 bg-black">
             <!-- {{ popularMovieList }} -->
-            <div class="swiper-container bg-black">
-              <h2 class="font-weight-bold">Popular</h2>
+            <div class="bg-black">
+              <h2 class="d-flex justify-content-start ml-6 mb-4 font-weight-bold">Popular</h2>
             <swiper
-    :slidesPerView="8"
+    :slidesPerView="10"
     :spaceBetween="2"
     :autoplay="{
-      delay: 2500,
+      delay: 2000,
       disableOnInteraction: false,
       pauseOnMouseEnter: true,
     }"
-    :slidesPerGroup="2"
+    :slidesPerGroup="5"
     :loop="true"
     :loopFillGroupWithBlank="true"
     :pagination="{
@@ -155,18 +155,18 @@
   </swiper>
 </div>
 
-<div>
-              <h2 class="font-weight-bold">Top Rated</h2>
+<div class="mt-6">
+              <h2 class="d-flex justify-content-start ml-6 mb-4 font-weight-bold">Top Rated</h2>
             <swiper
-    :slidesPerView="8"
+    :slidesPerView="10"
     :spaceBetween="2"
     :autoplay="{
-      delay: 2500,
+      delay: 2000,
       disableOnInteraction: false,
       pauseOnMouseEnter: true,
     }"
     :zoom="true"
-    :slidesPerGroup="2"
+    :slidesPerGroup="5"
     :loop="true"
     :loopFillGroupWithBlank="true"
     :pagination="{
@@ -180,17 +180,17 @@
   </swiper>
 </div>
 
-<div>
-              <h2 class="font-weight-bold">Upcoming Movies</h2>
+<div class="mt-6 pb-10">
+              <h2 class="d-flex justify-content-start ml-6 mb-4 font-weight-bold">Upcoming Movies</h2>
             <swiper
-    :slidesPerView="8"
+    :slidesPerView="10"
     :spaceBetween="2"
     :autoplay="{
-      delay: 2500,
+      delay: 2000,
       disableOnInteraction: false,
       pauseOnMouseEnter: true,
     }"
-    :slidesPerGroup="2"
+    :slidesPerGroup="5"
     :loop="true"
     :loopFillGroupWithBlank="true"
     :pagination="{
@@ -207,20 +207,19 @@
         </v-window-item>
 
         <v-window-item value="two">
-
-          <div class="bg-black">
+          <div class="pt-4 bg-black">
             <!-- {{ popularMovieList }} -->
             <div class="bg-black">
-              <h2 class="font-weight-bold">TV Show</h2>
+              <h2 class="d-flex justify-content-start ml-6 mb-4 font-weight-bold">Popular</h2>
             <swiper
-    :slidesPerView="8"
+    :slidesPerView="10"
     :spaceBetween="2"
     :autoplay="{
-      delay: 2500,
+      delay: 2000,
       disableOnInteraction: false,
       pauseOnMouseEnter: true,
     }"
-    :slidesPerGroup="2"
+    :slidesPerGroup="5"
     :loop="true"
     :loopFillGroupWithBlank="true"
     :pagination="{
@@ -233,16 +232,69 @@
   <swiper-slide :key="index" v-for="item, index in popularTvList"><img class="img-cover" :src="`https://image.tmdb.org/t/p/original${item.poster_path}`" alt="{{item}}"></swiper-slide>
   </swiper>
 </div>
+
+<div class="mt-6">
+              <h2 class="d-flex justify-content-start ml-6 mb-4 font-weight-bold">Latest</h2>
+            <swiper
+    :slidesPerView="10"
+    :spaceBetween="2"
+    :autoplay="{
+      delay: 2000,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+    }"
+    :zoom="true"
+    :slidesPerGroup="5"
+    :loop="true"
+    :loopFillGroupWithBlank="true"
+    :pagination="{
+      clickable: true,
+    }"
+    :navigation="true"
+    :modules="modules"
+    class="mySwiper"
+  >
+  <swiper-slide :key="index" v-for="item, index in latestTvList"><img :src="`https://image.tmdb.org/t/p/original${item.poster_path}`" alt="{{item}}"></swiper-slide>
+  </swiper>
+</div>
+
+<div class="mt-6 pb-10">
+              <h2 class="d-flex justify-content-start ml-6 mb-4 font-weight-bold">Top Rated</h2>
+            <swiper
+    :slidesPerView="10"
+    :spaceBetween="2"
+    :autoplay="{
+      delay: 2000,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+    }"
+    :slidesPerGroup="5"
+    :loop="true"
+    :loopFillGroupWithBlank="true"
+    :pagination="{
+      clickable: true,
+    }"
+    :navigation="true"
+    :modules="modules"
+    class="mySwiper"
+  >
+  <swiper-slide :key="index" v-for="item, index in topratedTvList"><img :src="`https://image.tmdb.org/t/p/original${item.poster_path}`" alt="{{item}}"></swiper-slide>
+  </swiper>
+</div>
 </div>
 
         </v-window-item>
       </v-window>
+      <Footer />
     </v-card-text>
+
+  </v-container>
 </template>
 
 <script>
 import router from '@/router/router';
 import axios from '@/axios';
+import FooterComponent from './FooterComponent'
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from "swiper/vue";
 
@@ -260,6 +312,7 @@ export default {
   components: {
     Swiper,
     SwiperSlide,
+    Footer: FooterComponent,
   },
   setup() {
     const onSwiper = (swiper) => {
@@ -287,6 +340,8 @@ export default {
       topRatedMovieList: '',
       upcomingMovieList: '',
       popularTvList: '',
+      latestTvList: '',
+      topratedTvList: '',
     }
   },
 
@@ -337,6 +392,16 @@ export default {
         this.popularTvList = res.data.results
         console.log(res)
       }) 
+    axios.get(`https://api.themoviedb.org/3/tv/on_the_air?api_key=${process.env.VUE_APP_API_KEY}&language=en-US`)
+      .then((res) => {
+        this.latestTvList = res.data.results
+        console.log('latest', res)
+      }) 
+    axios.get(`https://api.themoviedb.org/3/tv/top_rated?api_key=${process.env.VUE_APP_API_KEY}&language=en-US`)
+      .then((res) => {
+        this.topratedTvList = res.data.results
+        console.log('latest', res)
+      }) 
   },
 }
 </script>
@@ -349,7 +414,6 @@ export default {
 
 .mySwiper {
   width: 97.5%;
-  height: 30%;
 }
 
 .swiper-slide {
@@ -369,6 +433,8 @@ export default {
   -ms-flex-align: center;
   -webkit-align-items: center;
   align-items: center;
+  transition: all 300ms ease-in-out;
+  
 }
 
 .swiper-slide img {
@@ -377,10 +443,41 @@ export default {
   height: 100%;
   object-fit: cover; 
   border-radius: 5%;
+  cursor: grab;
 }
 
-.img-cover:hover {
-  cursor: pointer;
+.swiper-slide img:active {
+  cursor: grabbing;
 }
+
+.swiper-slide:hover {
+  transform: scale(1.5);
+  transition: all 300ms ease-in-out;
+  transition-delay: 300ms;
+  z-index: 1;
+}
+
+.swiper-slide:hover img {
+  transition-delay: 300ms;
+  box-shadow: 0 0 5px 1px rgba(0,0,0,0.5);
+}
+
+@media screen and (max-width: 599px) {
+  .swiper-slide img {
+    max-width: 14rem;
+  }
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .swiper-slide img {
+    max-width: 10.5rem;
+    border-radius: 2px;
+  }
+}
+
 
 </style>
