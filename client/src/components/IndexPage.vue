@@ -1,4 +1,19 @@
 <template>
+  <v-dialog max-height="900" max-width="1000" v-model="moviesPrompt">
+    <v-card>
+      <v-img
+        :src="`https://image.tmdb.org/t/p/original${image_path}`"
+        alt="{{item}}"
+        height="700px"
+        width="1500px"
+      ></v-img>
+      <v-card-actions>
+        <v-btn color="primary" block @click="moviesPrompt = false"
+          >Close Dialog</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   <v-container fluid class="pa-0 mt-8 align-center" justify="center">
     <v-app-bar flat class="pt-6 pb-2" color="rgb(0, 0, 0, 0.9)">
       <v-row>
@@ -175,8 +190,8 @@
                       icon
                       ripple="false"
                       variant="plain"
-                      to="/"
-                      class="image-button-element mb-12" 
+                      @click="viewMovies(item.poster_path)"
+                      class="image-button-element mb-12"
                     >
                       <v-icon class="icon-btn" size="100" color="white">
                         mdi-play-circle-outline
@@ -227,12 +242,11 @@
                       ripple="false"
                       variant="plain"
                       class="image-button-element mb-16"
-                      >
+                    >
                       <v-icon size="100" color="white">
                         mdi-play-circle-outline
                       </v-icon>
-                      </v-btn
-                    ></v-img
+                    </v-btn></v-img
                   >
                 </swiper-slide>
               </swiper>
@@ -276,12 +290,11 @@
                       variant="plain"
                       to="/"
                       class="image-button-element mb-16"
-                      >
+                    >
                       <v-icon size="100" color="white">
                         mdi-play-circle-outline
                       </v-icon>
-                      </v-btn
-                    ></v-img
+                    </v-btn></v-img
                   >
                 </swiper-slide>
               </swiper>
@@ -451,12 +464,19 @@ export default {
       latestTvList: "",
       topratedTvList: "",
       transparent: "rgba(255, 255, 255, 0)",
+      moviesPrompt: false,
+      image_path: "",
     };
   },
 
   methods: {
     toHomepage() {
       router.push("/");
+    },
+    viewMovies(image) {
+      this.image_path = '';
+      this.image_path = image;
+      this.moviesPrompt = true;
     },
     logout() {
       localStorage.clear();
