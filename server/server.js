@@ -1,4 +1,4 @@
-const app = require('./app/index.js')
+const app = require('./app/app')
 const fs = require('fs');
 const https = require('https');
 const mongoose = require('mongoose');

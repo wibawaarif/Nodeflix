@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const jwt = require('jsonwebtoken')
 
-router.get('/api/v1/user/:token', async(req, res) => {
-    if (!req.params.token) {
+router.post('/api/v1/movies', async(req, res) => {
+    const { title, url } = req.body
+
+    if (!req.body) {
         return res.status(400).send({
-            info: "You should provide an valid token"
+            info: "Can't send empty field"
         })
     }
 

@@ -1,8 +1,10 @@
 const router = require('express').Router();
 const jwt = require('jsonwebtoken')
 
-router.get('/api/v1/user/:token', async(req, res) => {
-    if (!req.params.token) {
+router.get('/api/v1/movies/:id', async(req, res) => {
+    const { id } = req.params
+
+    if (!id) {
         return res.status(400).send({
             info: "You should provide an valid token"
         })

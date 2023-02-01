@@ -53,17 +53,17 @@ passport.deserializeUser((id, done) => {
 const path = __dirname + '/views/' 
 const app = express();  
 
-/** Sanitizing */
+
+// sanitizing
 app.use(mongoSanitize());
 
-/** Securing XSS exploit */
+// securing XSS exploit
 app.use(xss());
 
-/** Securing HTTP param pollution exploit */
+// Securing HTTP param pollution exploit
 app.use(hpp());
 
-
-/** Securing headers */
+// Securing headers
 app.use(helmet());
 
 
