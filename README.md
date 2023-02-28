@@ -15,5 +15,3 @@ Technologies are used:
 Features:
   - Email registration
   - Google sign in
-  
-  85% in progress
